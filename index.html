@@ -1,1008 +1,471 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ひろしまAIサンドボックス 3Lens分析ダッシュボード</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Hiragino Sans"', '"Hiragino Kaku Gothic ProN"', '"Noto Sans JP"', 'sans-serif'],
-                    }
-                }
-            }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3lens戦略分析 | ひろしまAIサンドボックス課題66件</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: { 900: '#0f172a', 800: '#1e293b', 700: '#334155' },
+            gold: { 500: '#d4af37', 400: '#f0c14b' },
+          },
+          fontFamily: { sans: ['Noto Sans JP', 'sans-serif'] }
         }
-    </script>
-    <style>
-        .text-balance { text-wrap: balance; }
-        .text-pretty { text-wrap: pretty; }
-        .tabular-nums { font-variant-numeric: tabular-nums; }
-        [data-state="open"] { display: block; }
-        [data-state="closed"] { display: none; }
-    </style>
+      }
+    }
+  </script>
+  <style>
+    .gradient-bg { background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%); }
+    details summary { cursor: pointer; }
+    details summary::-webkit-details-marker { display: none; }
+    details[open] summary .chevron { transform: rotate(180deg); }
+  </style>
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-dvh">
-    <!-- Header -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center gap-3">
-                    <div class="size-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                        <svg class="size-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h1 class="font-bold text-lg">3Lens分析</h1>
-                        <p class="text-xs text-slate-500">ひろしまAIサンドボックス</p>
-                    </div>
-                </div>
-                <div class="text-sm text-slate-500 tabular-nums">
-                    分析日: 2026-01-27
-                </div>
-            </div>
-        </div>
-    </header>
+<body class="gradient-bg min-h-screen text-gray-200 font-sans">
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
-        <!-- Executive Summary -->
-        <section class="mb-12">
-            <div class="bg-blue-600 text-white rounded-2xl p-8 shadow-lg">
-                <div class="max-w-3xl">
-                    <p class="text-blue-200 text-sm font-medium mb-2">EXECUTIVE SUMMARY</p>
-                    <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-balance">
-                        「食品コンプライアンスAI」で実績を作り、<br>
-                        「建設技術継承AI」へ横展開せよ。
-                    </h2>
-                    <p class="text-blue-100 text-pretty">
-                        3つの視点（Strategist・Quick-Win Hunter・Market Analyst）が全ラウンドで一致した結論。
-                        規制対応市場と技術継承市場の交差点に、最も確実な市場機会がある。
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Top 3 Recommendations -->
-        <section class="mb-12">
-            <h3 class="text-lg font-bold mb-4 text-balance">最優先推奨案件</h3>
-            <div class="grid sm:grid-cols-3 gap-4">
-                <!-- #1 -->
-                <div class="bg-white rounded-xl border-2 border-amber-400 p-6 shadow-sm relative">
-                    <div class="absolute -top-3 -left-3 size-8 bg-amber-400 rounded-full flex items-center justify-center text-white font-bold text-sm shadow">1</div>
-                    <div class="mb-3">
-                        <span class="inline-block px-2 py-0.5 bg-amber-50 text-amber-700 text-xs font-medium rounded">製造業</span>
-                    </div>
-                    <h4 class="font-bold text-lg mb-1 text-balance">規格書自動転記</h4>
-                    <p class="text-slate-500 text-sm mb-3">アンデルセン</p>
-                    <div class="space-y-1 text-sm">
-                        <div class="flex items-center gap-2">
-                            <span class="text-green-600">●</span>
-                            <span>技術実現性 ◎</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-green-600">●</span>
-                            <span>横展開性 ◎（食品3万社）</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-green-600">●</span>
-                            <span>規制需要 ◎</span>
-                        </div>
-                    </div>
-                    <div class="mt-4 pt-4 border-t border-slate-100">
-                        <p class="text-xs text-slate-500 text-pretty">2025年食品衛生法改正を追い風に、Excel→Excel変換で即実装可能</p>
-                    </div>
-                </div>
-
-                <!-- #2 -->
-                <div class="bg-white rounded-xl border-2 border-slate-300 p-6 shadow-sm relative">
-                    <div class="absolute -top-3 -left-3 size-8 bg-slate-400 rounded-full flex items-center justify-center text-white font-bold text-sm shadow">2</div>
-                    <div class="mb-3">
-                        <span class="inline-block px-2 py-0.5 bg-orange-50 text-orange-700 text-xs font-medium rounded">建設業</span>
-                    </div>
-                    <h4 class="font-bold text-lg mb-1 text-balance">引継ぎマニュアル作成</h4>
-                    <p class="text-slate-500 text-sm mb-3">マーテックス</p>
-                    <div class="space-y-1 text-sm">
-                        <div class="flex items-center gap-2">
-                            <span class="text-green-600">●</span>
-                            <span>技術実現性 ◎（RAG+LLM）</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-green-600">●</span>
-                            <span>横展開性 ◎（建設47万社）</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-green-600">●</span>
-                            <span>構造的需要 ◎</span>
-                        </div>
-                    </div>
-                    <div class="mt-4 pt-4 border-t border-slate-100">
-                        <p class="text-xs text-slate-500 text-pretty">2024年問題（大量退職）により技術継承ニーズが急増</p>
-                    </div>
-                </div>
-
-                <!-- #3 -->
-                <div class="bg-white rounded-xl border-2 border-orange-200 p-6 shadow-sm relative">
-                    <div class="absolute -top-3 -left-3 size-8 bg-orange-300 rounded-full flex items-center justify-center text-white font-bold text-sm shadow">3</div>
-                    <div class="mb-3">
-                        <span class="inline-block px-2 py-0.5 bg-orange-50 text-orange-700 text-xs font-medium rounded">建設業</span>
-                    </div>
-                    <h4 class="font-bold text-lg mb-1 text-balance">広報記事生成</h4>
-                    <p class="text-slate-500 text-sm mb-3">森信建設</p>
-                    <div class="space-y-1 text-sm">
-                        <div class="flex items-center gap-2">
-                            <span class="text-blue-600">●</span>
-                            <span>技術実現性 ○</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-blue-600">●</span>
-                            <span>リスク 低（人間レビュー前提）</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-blue-600">●</span>
-                            <span>実績作り向き</span>
-                        </div>
-                    </div>
-                    <div class="mt-4 pt-4 border-t border-slate-100">
-                        <p class="text-xs text-slate-500 text-pretty">100%正解不要の領域で信頼構築に最適</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Two-Axis Strategy -->
-        <section class="mb-12">
-            <h3 class="text-lg font-bold mb-4 text-balance">推奨2軸戦略</h3>
-            <div class="grid md:grid-cols-2 gap-4">
-                <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="size-12 bg-emerald-100 rounded-lg flex items-center justify-center">
-                            <svg class="size-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="text-xs text-emerald-600 font-medium">軸1</p>
-                            <h4 class="font-bold text-lg">食品コンプライアンスAI</h4>
-                        </div>
-                    </div>
-                    <ul class="space-y-2 text-sm text-slate-600 text-pretty">
-                        <li class="flex items-start gap-2">
-                            <span class="text-emerald-500 mt-1">→</span>
-                            <span>規格書自動転記から開始</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-emerald-500 mt-1">→</span>
-                            <span>2025年食品衛生法改正を追い風に</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-emerald-500 mt-1">→</span>
-                            <span>食品→化粧品→医薬品へ横展開</span>
-                        </li>
-                    </ul>
-                    <div class="mt-4 pt-4 border-t border-slate-100">
-                        <div class="flex items-center justify-between text-sm">
-                            <span class="text-slate-500">市場規模</span>
-                            <span class="font-bold tabular-nums">食品製造業 3万社</span>
-                        </div>
-                        <div class="flex items-center justify-between text-sm mt-1">
-                            <span class="text-slate-500">想定単価</span>
-                            <span class="font-bold tabular-nums">100-300万円/年</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="size-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <svg class="size-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="text-xs text-blue-600 font-medium">軸2</p>
-                            <h4 class="font-bold text-lg">建設技術継承AI</h4>
-                        </div>
-                    </div>
-                    <ul class="space-y-2 text-sm text-slate-600 text-pretty">
-                        <li class="flex items-start gap-2">
-                            <span class="text-blue-500 mt-1">→</span>
-                            <span>引継ぎマニュアル生成から開始</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-blue-500 mt-1">→</span>
-                            <span>2024年問題（大量退職）を追い風に</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-blue-500 mt-1">→</span>
-                            <span>建設→製造→インフラへ横展開</span>
-                        </li>
-                    </ul>
-                    <div class="mt-4 pt-4 border-t border-slate-100">
-                        <div class="flex items-center justify-between text-sm">
-                            <span class="text-slate-500">市場規模</span>
-                            <span class="font-bold tabular-nums">建設業 47万社</span>
-                        </div>
-                        <div class="flex items-center justify-between text-sm mt-1">
-                            <span class="text-slate-500">想定単価</span>
-                            <span class="font-bold tabular-nums">50-200万円/年</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Market Insights -->
-        <section class="mb-12">
-            <h3 class="text-lg font-bold mb-4 text-balance">市場分析インサイト</h3>
-            <div class="grid md:grid-cols-3 gap-4">
-                <!-- Industry Distribution -->
-                <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
-                    <h4 class="font-bold mb-4">産業分野別 件数</h4>
-                    <div class="space-y-3">
-                        <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span>建設業</span>
-                                <span class="font-bold tabular-nums">3件</span>
-                            </div>
-                            <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
-                                <div class="h-full bg-blue-500 rounded-full" style="width: 100%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span>製造業</span>
-                                <span class="font-bold tabular-nums">2件</span>
-                            </div>
-                            <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
-                                <div class="h-full bg-emerald-500 rounded-full" style="width: 66%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span>農林水産</span>
-                                <span class="font-bold tabular-nums">2件</span>
-                            </div>
-                            <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
-                                <div class="h-full bg-green-500 rounded-full" style="width: 66%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span>宿泊・飲食</span>
-                                <span class="font-bold tabular-nums">2件</span>
-                            </div>
-                            <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
-                                <div class="h-full bg-amber-500 rounded-full" style="width: 66%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span>卸売・小売</span>
-                                <span class="font-bold tabular-nums">2件</span>
-                            </div>
-                            <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
-                                <div class="h-full bg-purple-500 rounded-full" style="width: 66%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span>その他</span>
-                                <span class="font-bold tabular-nums">4件</span>
-                            </div>
-                            <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
-                                <div class="h-full bg-slate-400 rounded-full" style="width: 100%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Challenge Type -->
-                <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
-                    <h4 class="font-bold mb-4">課題タイプ分類</h4>
-                    <div class="space-y-3">
-                        <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span>データ転記・入力自動化</span>
-                                <span class="font-bold tabular-nums">33%</span>
-                            </div>
-                            <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
-                                <div class="h-full bg-blue-500 rounded-full" style="width: 33%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span>意思決定支援・予測</span>
-                                <span class="font-bold tabular-nums">27%</span>
-                            </div>
-                            <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
-                                <div class="h-full bg-emerald-500 rounded-full" style="width: 27%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span>コミュニケーション整理</span>
-                                <span class="font-bold tabular-nums">20%</span>
-                            </div>
-                            <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
-                                <div class="h-full bg-amber-500 rounded-full" style="width: 20%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span>発見・検知系</span>
-                                <span class="font-bold tabular-nums">13%</span>
-                            </div>
-                            <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
-                                <div class="h-full bg-red-500 rounded-full" style="width: 13%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span>その他</span>
-                                <span class="font-bold tabular-nums">7%</span>
-                            </div>
-                            <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
-                                <div class="h-full bg-slate-400 rounded-full" style="width: 7%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Key Insight -->
-                <div class="bg-slate-800 text-white rounded-xl p-6 shadow-sm">
-                    <h4 class="font-bold mb-4">最重要インサイト</h4>
-                    <blockquote class="text-slate-300 text-pretty mb-4">
-                        地方企業のAIニーズは「派手なDX」ではなく「地味だが確実な業務効率化」。
-                    </blockquote>
-                    <div class="space-y-3 text-sm">
-                        <div class="flex items-start gap-2">
-                            <span class="text-amber-400">★</span>
-                            <span class="text-slate-300">文書転記・入力自動化が最大のボリュームゾーン</span>
-                        </div>
-                        <div class="flex items-start gap-2">
-                            <span class="text-amber-400">★</span>
-                            <span class="text-slate-300">規制強化という外部圧力</span>
-                        </div>
-                        <div class="flex items-start gap-2">
-                            <span class="text-amber-400">★</span>
-                            <span class="text-slate-300">人材不足という構造問題</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- All Issues Dashboard -->
-        <section class="mb-12">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-                <h3 class="text-lg font-bold text-balance">全15件 課題一覧</h3>
-
-                <!-- Filters -->
-                <div class="flex flex-wrap gap-2">
-                    <button onclick="filterIssues('all')" data-filter="all" class="filter-btn px-3 py-1.5 text-sm font-medium rounded-lg bg-blue-600 text-white">
-                        すべて
-                    </button>
-                    <button onclick="filterIssues('priority')" data-filter="priority" class="filter-btn px-3 py-1.5 text-sm font-medium rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200">
-                        最優先
-                    </button>
-                    <button onclick="filterIssues('promising')" data-filter="promising" class="filter-btn px-3 py-1.5 text-sm font-medium rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200">
-                        有望
-                    </button>
-                    <button onclick="filterIssues('avoid')" data-filter="avoid" class="filter-btn px-3 py-1.5 text-sm font-medium rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200">
-                        要注意
-                    </button>
-                </div>
-            </div>
-
-            <div id="issues-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                <!-- Issues will be rendered here by JavaScript -->
-            </div>
-        </section>
-
-        <!-- Implementation Roadmap -->
-        <section class="mb-12">
-            <h3 class="text-lg font-bold mb-4 text-balance">実行ロードマップ</h3>
-            <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
-                        <thead class="bg-slate-50 border-b border-slate-200">
-                            <tr>
-                                <th class="px-4 py-3 text-left font-semibold text-slate-600">フェーズ</th>
-                                <th class="px-4 py-3 text-left font-semibold text-slate-600">期間</th>
-                                <th class="px-4 py-3 text-left font-semibold text-slate-600">アクション</th>
-                                <th class="px-4 py-3 text-left font-semibold text-slate-600">成果指標</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100">
-                            <tr class="bg-amber-50">
-                                <td class="px-4 py-3 font-bold text-amber-700">Phase 0</td>
-                                <td class="px-4 py-3 tabular-nums">今週</td>
-                                <td class="px-4 py-3 text-pretty">規格書転記（アンデルセン）に申し込み</td>
-                                <td class="px-4 py-3 text-slate-500">申込完了</td>
-                            </tr>
-                            <tr>
-                                <td class="px-4 py-3 font-bold">Phase 1</td>
-                                <td class="px-4 py-3 tabular-nums">1-2週</td>
-                                <td class="px-4 py-3 text-pretty">食品業界の規格書フォーマット調査</td>
-                                <td class="px-4 py-3 text-slate-500">フォーマット10種収集</td>
-                            </tr>
-                            <tr>
-                                <td class="px-4 py-3 font-bold">Phase 2</td>
-                                <td class="px-4 py-3 tabular-nums">3-4週</td>
-                                <td class="px-4 py-3 text-pretty">MVP開発（Excel→Excel変換）</td>
-                                <td class="px-4 py-3 text-slate-500">プロトタイプ完成</td>
-                            </tr>
-                            <tr>
-                                <td class="px-4 py-3 font-bold">Phase 3</td>
-                                <td class="px-4 py-3 tabular-nums">2ヶ月</td>
-                                <td class="px-4 py-3 text-pretty">パイロット実施、効果測定</td>
-                                <td class="px-4 py-3 text-slate-500">工数削減率算出</td>
-                            </tr>
-                            <tr>
-                                <td class="px-4 py-3 font-bold">Phase 4</td>
-                                <td class="px-4 py-3 tabular-nums">3-6ヶ月</td>
-                                <td class="px-4 py-3 text-pretty">有償化、事例構築</td>
-                                <td class="px-4 py-3 text-slate-500 tabular-nums">有料顧客2社、MRR 50万円</td>
-                            </tr>
-                            <tr class="bg-blue-50">
-                                <td class="px-4 py-3 font-bold text-blue-700">Phase 5</td>
-                                <td class="px-4 py-3 tabular-nums">6ヶ月〜</td>
-                                <td class="px-4 py-3 text-pretty">建設業（引継ぎマニュアル）へ横展開</td>
-                                <td class="px-4 py-3 text-slate-500">2軸確立</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- Success Keys -->
-        <section class="mb-12">
-            <h3 class="text-lg font-bold mb-4 text-balance">成功のための3つの鍵</h3>
-            <div class="grid sm:grid-cols-3 gap-4">
-                <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
-                    <div class="size-10 bg-emerald-100 rounded-lg flex items-center justify-center mb-4">
-                        <span class="text-emerald-600 font-bold">1</span>
-                    </div>
-                    <h4 class="font-bold mb-2 text-balance">「100%正解不要」から始める</h4>
-                    <p class="text-sm text-slate-600 text-pretty">
-                        人間レビュー前提の領域で信頼構築。精度要求領域への段階的移行。
-                    </p>
-                </div>
-                <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
-                    <div class="size-10 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                        <span class="text-blue-600 font-bold">2</span>
-                    </div>
-                    <h4 class="font-bold mb-2 text-balance">業界特化でポジションを取る</h4>
-                    <p class="text-sm text-slate-600 text-pretty">
-                        「食品コンプライアンスAIといえばこの会社」。汎用ツールではなく業界知見で差別化。
-                    </p>
-                </div>
-                <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
-                    <div class="size-10 bg-amber-100 rounded-lg flex items-center justify-center mb-4">
-                        <span class="text-amber-600 font-bold">3</span>
-                    </div>
-                    <h4 class="font-bold mb-2 text-balance">1社目は赤字覚悟、2社目から回収</h4>
-                    <p class="text-sm text-slate-600 text-pretty">
-                        事例構築を最優先。口コミ・紹介で横展開。
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Avoid List -->
-        <section class="mb-12">
-            <h3 class="text-lg font-bold mb-4 text-balance">避けるべき案件</h3>
-            <div class="bg-red-50 border border-red-200 rounded-xl p-6">
-                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="flex items-start gap-3">
-                        <div class="size-8 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <svg class="size-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="font-bold text-sm">ヤングケアラー発見</p>
-                            <p class="text-xs text-red-700">倫理・プライバシー問題</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <div class="size-8 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <svg class="size-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="font-bold text-sm">知能化経営</p>
-                            <p class="text-xs text-red-700">スコープ巨大、定義曖昧</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <div class="size-8 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <svg class="size-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="font-bold text-sm">OTA手数料削減</p>
-                            <p class="text-xs text-red-700">AI課題ではない</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <div class="size-8 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <svg class="size-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="font-bold text-sm">行動データ補完</p>
-                            <p class="text-xs text-red-700">データ品質、AI幻覚リスク</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Detail Modal -->
-    <div id="modal-backdrop" class="fixed inset-0 bg-black/50 z-50 hidden" onclick="closeModal()"></div>
-    <div id="modal" class="fixed inset-x-4 top-20 bottom-20 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-2xl bg-white rounded-2xl shadow-2xl z-50 hidden overflow-hidden flex flex-col" style="padding-bottom: env(safe-area-inset-bottom);">
-        <div class="flex items-center justify-between p-4 border-b border-slate-200">
-            <h3 id="modal-title" class="font-bold text-lg"></h3>
-            <button onclick="closeModal()" class="size-8 flex items-center justify-center rounded-lg hover:bg-slate-100" aria-label="閉じる">
-                <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
-        </div>
-        <div id="modal-content" class="flex-1 overflow-y-auto p-4">
-            <!-- Content injected by JS -->
-        </div>
+  <!-- Header -->
+  <header class="border-b border-navy-700 py-4">
+    <div class="max-w-5xl mx-auto px-4">
+      <h1 class="text-xl font-bold">3lens戦略分析</h1>
+      <p class="text-sm text-gray-400">ひろしまAIサンドボックス課題66件 | 2026-01-28</p>
     </div>
+  </header>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 py-6 mt-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-500">
-                <p>3Lens分析（Strategist × Quick-Win Hunter × Market Analyst）</p>
-                <p class="tabular-nums">分析日: 2026-01-27</p>
-            </div>
+  <main class="max-w-5xl mx-auto px-4 py-8">
+
+    <!-- サマリー -->
+    <section class="mb-12">
+      <h2 class="text-lg font-bold text-gold-400 mb-4">分析サマリー</h2>
+      <div class="bg-navy-800 rounded-lg p-6 space-y-4">
+        <p class="text-sm leading-relaxed">
+          66件の課題を<strong>Market Strategist</strong>（市場性）・<strong>Data Asset Evaluator</strong>（データ資産価値）・<strong>Growth Architect</strong>（横展開可能性）の3視点で評価。
+          Blind Peer Review法（3ラウンド相互レビュー）により、視点の偏りを排除した統合戦略を策定。
+        </p>
+        <div class="border-l-4 border-gold-500 pl-4">
+          <p class="font-bold text-white">核心的結論：「非標準データの標準化」が価値の源泉</p>
+          <p class="text-sm text-gray-400 mt-1">他社が手を出しにくい生データ（LINE、仕切書、音声等）を構造化できる技術力が競争優位となる</p>
         </div>
-    </footer>
+      </div>
+    </section>
 
-    <script>
-        // Issue data
-        const issues = [
-            {
-                id: 1,
-                title: "得意先別規格書フォーマットへの自動転記",
-                company: "アンデルセン",
-                industry: "製造業",
-                category: "priority",
-                rating: "★★★",
-                techScore: "◎",
-                scaleScore: "◎",
-                urgencyScore: "◎",
-                risk: "低",
-                summary: "社内で一元管理している情報を、得意先様ごとのフォーマットおよび記載ルールに合わせて、自動で転記・帳票生成できる仕組み",
-                reason: "Excel→Excel変換で既存技術で完結。食品3万社→化粧品→医薬品へ横展開可能。2025年食品衛生法改正で需要増。",
-                approach: "2-3ヶ月でMVP、パイロット1社で効果実証",
-                marketSize: "食品製造業 3万社",
-                priceRange: "100-300万円/年"
-            },
-            {
-                id: 2,
-                title: "ヤングケアラーの発見・支援",
-                company: "三原市",
-                industry: "その他(行政)",
-                category: "avoid",
-                rating: "★☆☆",
-                techScore: "×",
-                scaleScore: "△",
-                urgencyScore: "○",
-                risk: "高",
-                summary: "AIを活用し、ヤングケアラーの効果的・効率的な「発見」と「状況に合わせた支援の決定」を行いたい",
-                reason: "データ取得困難、倫理・プライバシー問題、行政の意思決定が遅い、成果定義が曖昧。",
-                approach: "避けるべき",
-                marketSize: "-",
-                priceRange: "-"
-            },
-            {
-                id: 3,
-                title: "商談の質向上・情報蓄積の自動化",
-                company: "八天堂ファーム",
-                industry: "農林水産",
-                category: "promising",
-                rating: "★★☆",
-                techScore: "○",
-                scaleScore: "△",
-                urgencyScore: "○",
-                risk: "低",
-                summary: "商談結果の自動要約や相手の反応を分析して面談結果の振り返りをレビュー。トップ営業のトークパターンをAIが分析。",
-                reason: "音声→テキスト→要約のパイプラインは確立済み。ただし横展開性は限定的。",
-                approach: "協業しやすい企業として検討",
-                marketSize: "限定的",
-                priceRange: "50-100万円/年"
-            },
-            {
-                id: 4,
-                title: "農園どこでもドア",
-                company: "八天堂ファーム",
-                industry: "農林水産",
-                category: "review",
-                rating: "★☆☆",
-                techScore: "△",
-                scaleScore: "△",
-                urgencyScore: "△",
-                risk: "中",
-                summary: "スマホカメラで病気の有無、育成状態を記録し、収穫予測や等級判定まで行うAI開発",
-                reason: "画像認識は技術的に可能だが、農業特化で横展開が限定的。データ蓄積に時間がかかる。",
-                approach: "優先度低め",
-                marketSize: "限定的",
-                priceRange: "-"
-            },
-            {
-                id: 5,
-                title: "工事現場記録から広報記事作成",
-                company: "森信建設",
-                industry: "建設業",
-                category: "promising",
-                rating: "★★☆",
-                techScore: "○",
-                scaleScore: "○",
-                urgencyScore: "△",
-                risk: "低",
-                summary: "工事現場の写真データとテキストデータから、お客様向けの広報記事や社内日報を自動生成",
-                reason: "マルチモーダルLLMで対応可能。100%正解不要で実績作りに最適。人間レビュー前提。",
-                approach: "実績作り向き。信頼構築の第一歩として最適。",
-                marketSize: "建設業＋製造業",
-                priceRange: "30-100万円/年"
-            },
-            {
-                id: 6,
-                title: "行動データ補完による地域マーケティング",
-                company: "中国新聞社",
-                industry: "その他(メディア)",
-                category: "avoid",
-                rating: "★☆☆",
-                techScore: "△",
-                scaleScore: "△",
-                urgencyScore: "△",
-                risk: "高",
-                summary: "34万人会員基盤のデータ格差をAIで補完し、全層に最適な情報提供とマッチングを実現",
-                reason: "データ品質問題、AI幻覚リスク、直接収益に繋がりにくい。",
-                approach: "避けるべき",
-                marketSize: "-",
-                priceRange: "-"
-            },
-            {
-                id: 7,
-                title: "サイバー被害72h初動復旧ゲーム",
-                company: "CyberMER",
-                industry: "その他(IT)",
-                category: "review",
-                rating: "★☆☆",
-                techScore: "○",
-                scaleScore: "△",
-                urgencyScore: "○",
-                risk: "中",
-                summary: "インシデント発生直後の「魔の72時間」に特化した意思決定シミュレーションゲーム開発",
-                reason: "ニッチだが需要あり。ただし市場規模が限定的でスケールしにくい。",
-                approach: "要検討",
-                marketSize: "限定的",
-                priceRange: "-"
-            },
-            {
-                id: 8,
-                title: "農業サポートツール",
-                company: "First train",
-                industry: "卸売・小売業",
-                category: "review",
-                rating: "★☆☆",
-                techScore: "○",
-                scaleScore: "△",
-                urgencyScore: "△",
-                risk: "中",
-                summary: "地域の実情に合った栽培方法についてのアドバイスをくれるサポートツール",
-                reason: "技術的には可能だが、地域特化でスケールしにくい。類似サービスも存在。",
-                approach: "要検討",
-                marketSize: "限定的",
-                priceRange: "-"
-            },
-            {
-                id: 9,
-                title: "乗務員シフト表作成効率化",
-                company: "広島バス",
-                industry: "運輸業",
-                category: "promising",
-                rating: "★★☆",
-                techScore: "△",
-                scaleScore: "◎",
-                urgencyScore: "○",
-                risk: "中",
-                summary: "400名近い乗務員のシフト表作成をAIで効率化",
-                reason: "組合せ最適化問題で技術難易度あり。ただし運輸・介護・小売など横展開可能、200億円市場。",
-                approach: "技術難易度に注意しつつ検討",
-                marketSize: "200億円市場",
-                priceRange: "150-300万円/年"
-            },
-            {
-                id: 10,
-                title: "工事・漏水等のAI予測",
-                company: "マーテックス",
-                industry: "建設業",
-                category: "review",
-                rating: "★☆☆",
-                techScore: "△",
-                scaleScore: "○",
-                urgencyScore: "○",
-                risk: "中",
-                summary: "既存データや衛星写真を用いて工事需要や漏水を事前予測",
-                reason: "予測保全は需要あるが、データ品質と精度検証に課題。",
-                approach: "要検討",
-                marketSize: "中程度",
-                priceRange: "-"
-            },
-            {
-                id: 11,
-                title: "OTA手数料削減",
-                company: "Onzo",
-                industry: "宿泊業",
-                category: "avoid",
-                rating: "★☆☆",
-                techScore: "-",
-                scaleScore: "-",
-                urgencyScore: "○",
-                risk: "-",
-                summary: "自社ホームページからの予約を増やし、OTAへの手数料を削減したい",
-                reason: "AI課題ではなく事業戦略・マーケティング問題。AI開発案件として不適切。",
-                approach: "避けるべき",
-                marketSize: "-",
-                priceRange: "-"
-            },
-            {
-                id: 12,
-                title: "宿泊施設の価格最適化",
-                company: "アコモス",
-                industry: "宿泊業",
-                category: "promising",
-                rating: "★★☆",
-                techScore: "△",
-                scaleScore: "○",
-                urgencyScore: "○",
-                risk: "中",
-                summary: "AIによるレベニューマネジメント（日々の価格最適化）",
-                reason: "ダイナミックプライシングは需要あり、収益直結でROI訴求容易。ただしメトロエンジン等と競合。",
-                approach: "差別化が必要",
-                marketSize: "宿泊5万軒",
-                priceRange: "100-200万円/年"
-            },
-            {
-                id: 13,
-                title: "外乱に強い知能化経営",
-                company: "マツダE&T",
-                industry: "製造業",
-                category: "avoid",
-                rating: "★☆☆",
-                techScore: "△",
-                scaleScore: "△",
-                urgencyScore: "△",
-                risk: "高",
-                summary: "外部データを収集・統合し、経営層が「何をすべきか」を即座に判断できる状態にしたい",
-                reason: "スコープ巨大、「経営判断」の正解がない、個社カスタマイズ必須、長期案件化リスク。",
-                approach: "避けるべき",
-                marketSize: "-",
-                priceRange: "-"
-            },
-            {
-                id: 14,
-                title: "競り人とのコミュニケーションデータ化",
-                company: "ウーオ",
-                industry: "卸売・小売業",
-                category: "promising",
-                rating: "★★☆",
-                techScore: "◎",
-                scaleScore: "△",
-                urgencyScore: "○",
-                risk: "低",
-                summary: "LINE等での自然言語コミュニケーションをAIで構造化データに変換",
-                reason: "LINEメッセージ→構造化はLLM得意領域。ウーオ自体がITスタートアップで協業しやすい。",
-                approach: "協業しやすい。水産業特化だが、LLM活用の好事例になる。",
-                marketSize: "水産業特化",
-                priceRange: "50-100万円/年"
-            },
-            {
-                id: 15,
-                title: "社内引継ぎマニュアル作成",
-                company: "マーテックス",
-                industry: "建設業",
-                category: "priority",
-                rating: "★★★",
-                techScore: "◎",
-                scaleScore: "◎",
-                urgencyScore: "◎",
-                risk: "低",
-                summary: "各担当者が随時入力したデータを蓄積し、顧客ごとの最新データを検索やチャットボットで探し出せる仕組み",
-                reason: "RAG＋LLMの定番構成。建設業47万社→製造業→全業界へ横展開可能。2024年問題で構造的需要。",
-                approach: "「建設技術継承AI」としてパッケージ化",
-                marketSize: "建設業 47万社",
-                priceRange: "50-200万円/年"
-            }
-        ];
+    <!-- 優先案件詳細 -->
+    <section class="mb-12">
+      <h2 class="text-lg font-bold text-gold-400 mb-4">優先案件詳細（4件）</h2>
 
-        // Industry colors
-        const industryColors = {
-            "製造業": { bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-200" },
-            "建設業": { bg: "bg-orange-50", text: "text-orange-700", border: "border-orange-200" },
-            "農林水産": { bg: "bg-green-50", text: "text-green-700", border: "border-green-200" },
-            "運輸業": { bg: "bg-blue-50", text: "text-blue-700", border: "border-blue-200" },
-            "宿泊業": { bg: "bg-purple-50", text: "text-purple-700", border: "border-purple-200" },
-            "卸売・小売業": { bg: "bg-pink-50", text: "text-pink-700", border: "border-pink-200" },
-            "その他(行政)": { bg: "bg-slate-50", text: "text-slate-700", border: "border-slate-200" },
-            "その他(メディア)": { bg: "bg-slate-50", text: "text-slate-700", border: "border-slate-200" },
-            "その他(IT)": { bg: "bg-slate-50", text: "text-slate-700", border: "border-slate-200" }
-        };
+      <!-- #1 食品規格書 -->
+      <article class="bg-navy-800 rounded-lg mb-4 overflow-hidden">
+        <div class="bg-gold-500/10 border-l-4 border-gold-500 p-4">
+          <div class="flex items-center gap-3">
+            <span class="bg-gold-500 text-navy-900 font-bold px-2 py-1 rounded text-sm">1位</span>
+            <div>
+              <h3 class="font-bold text-white">得意先別規格書フォーマットへの自動転記</h3>
+              <p class="text-sm text-gray-400">株式会社アンデルセン・パン生活文化研究所 | 製造業</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-4 space-y-4 text-sm">
+          <div>
+            <h4 class="font-bold text-gold-400 mb-1">課題の内容</h4>
+            <p class="text-gray-300 leading-relaxed">
+              製品の使用原材料、アレルゲン、栄養成分、製造工程、包材、表示内容等を記載した「規格書」を得意先様へ提出している。
+              <strong class="text-white">主な課題：</strong>
+            </p>
+            <ul class="list-disc list-inside text-gray-300 mt-2 space-y-1">
+              <li>社内システムの情報を得意先指定フォーマットへ<strong class="text-white">手作業で転記</strong>しており、作成工数が大きい</li>
+              <li>手作業により<strong class="text-white">入力誤り・転記漏れ</strong>が発生しやすく、精度面のリスクがある</li>
+              <li>得意先ごとにフォーマットが異なるため、同一製品でも提出先ごとに作成が必要（<strong class="text-white">重複作業</strong>）</li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-bold text-gold-400 mb-1">解決の方向性</h4>
+            <p class="text-gray-300">社内で一元管理している情報を基に、得意先ごとのフォーマットおよび記載ルールに合わせて、<strong class="text-white">自動で転記・帳票生成</strong>できる仕組み（AI活用を含む）を構築</p>
+          </div>
+          <div>
+            <h4 class="font-bold text-gold-400 mb-1">期待される効果</h4>
+            <p class="text-gray-300">規格書作成の工数削減、ミス低減、法令改正時の迅速な更新対応、属人化の解消。<strong class="text-white">同様の課題を抱える他の食品企業にも展開可能</strong>であり、食品産業全体の事務負担軽減と品質向上に寄与する波及効果の大きい取り組み。</p>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <h4 class="font-bold text-gold-400 mb-1">使えるデータ</h4>
+              <p class="text-gray-300">Excel形式（社内で一元管理された製品情報）</p>
+            </div>
+            <div>
+              <h4 class="font-bold text-gold-400 mb-1">事業内容</h4>
+              <p class="text-gray-300">パンの製造・販売（1948年広島創業、アンデルセン・リトルマーメイド・タカキベーカリー展開）</p>
+            </div>
+          </div>
+          <div class="bg-navy-700/50 rounded p-3 mt-2">
+            <h4 class="font-bold text-white mb-2">なぜ1位なのか（3視点の評価）</h4>
+            <ul class="text-gray-300 space-y-1">
+              <li><strong class="text-blue-400">Market:</strong> 食品製造業約5万社に共通課題。コンプライアンス予算として即時収益化可能</li>
+              <li><strong class="text-emerald-400">Data:</strong> 非標準フォーマット処理のノウハウが蓄積され、参入障壁になる</li>
+              <li><strong class="text-purple-400">Growth:</strong> 食品→医薬品→化学品への横展開パスが明確。3年で100社達成可能</li>
+            </ul>
+          </div>
+        </div>
+      </article>
 
-        // Category styles
-        const categoryStyles = {
-            "priority": { border: "border-amber-400", badge: "bg-amber-100 text-amber-800" },
-            "promising": { border: "border-blue-300", badge: "bg-blue-100 text-blue-800" },
-            "review": { border: "border-slate-200", badge: "bg-slate-100 text-slate-600" },
-            "avoid": { border: "border-red-200", badge: "bg-red-100 text-red-700" }
-        };
+      <!-- #14, #36 水産流通DX -->
+      <article class="bg-navy-800 rounded-lg mb-4 overflow-hidden">
+        <div class="bg-gray-500/10 border-l-4 border-gray-400 p-4">
+          <div class="flex items-center gap-3">
+            <span class="bg-gray-400 text-navy-900 font-bold px-2 py-1 rounded text-sm">2位</span>
+            <div>
+              <h3 class="font-bold text-white">水産流通DX（競り人コミュニケーション＋データ突合）</h3>
+              <p class="text-sm text-gray-400">株式会社ウーオ | 卸売業・小売業</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-4 space-y-4 text-sm">
+          <div>
+            <h4 class="font-bold text-gold-400 mb-1">課題の内容（2つの課題を統合）</h4>
+            <div class="space-y-3">
+              <div class="bg-navy-700/30 rounded p-3">
+                <p class="font-medium text-white mb-1">#14 競り人とのコミュニケーションのデータ化</p>
+                <p class="text-gray-300">多くの「競り人」とLINE等で継続的にコミュニケーション。注文や報告が<strong class="text-white">自然言語形態</strong>でなされる。現状はコーポレート側で内容を読み取り、注文数量を数値化する変換を行っており、<strong class="text-white">多大な工数が発生</strong>。</p>
+              </div>
+              <div class="bg-navy-700/30 rounded p-3">
+                <p class="font-medium text-white mb-1">#36 複数・バラバラのデータを自動突合</p>
+                <p class="text-gray-300">水産物流通において、情報の中身・形式（フォーマット）は統一されていない。運送会社からの<strong class="text-white">目片（重量）データ</strong>、漁協からの<strong class="text-white">仕切書（紙・PDF等バラバラ）</strong>を売上IDと紐づけ・突合する必要があるが、マニュアル対応で膨大な労力がかかっている。</p>
+              </div>
+            </div>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <h4 class="font-bold text-gold-400 mb-1">使えるデータ</h4>
+              <ul class="text-gray-300 space-y-1">
+                <li>・競り人とのLINEコミュニケーションデータ</li>
+                <li>・目片（重量）データ</li>
+                <li>・仕切書（紙・PDF、フォーマット不統一）</li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-bold text-gold-400 mb-1">会社概要</h4>
+              <p class="text-gray-300">広島市に本社を置く水産DXスタートアップ。「すべての町を、美味しい港町に。」を掲げ、全国の漁港・市場・小売・飲食店をつなぐBtoBマーケットプレイス「UUUO」を運営。</p>
+            </div>
+          </div>
+          <div class="bg-navy-700/50 rounded p-3 mt-2">
+            <h4 class="font-bold text-white mb-2">なぜ2位なのか（3視点の評価）</h4>
+            <ul class="text-gray-300 space-y-1">
+              <li><strong class="text-blue-400">Market:</strong> 水産市場約15兆円（デジタル化率5%未満）。ブルーオーシャン</li>
+              <li><strong class="text-emerald-400">Data:</strong> <strong class="text-white">データ希少性最高</strong>。業界標準化の空白を埋める者が流通インフラを握る。LINE/仕切書/目片は他社が容易に集められない</li>
+              <li><strong class="text-purple-400">Growth:</strong> 全国漁港へネットワーク展開可能。ただし漁協・市場法との調整に時間要（12-36ヶ月）</li>
+            </ul>
+          </div>
+        </div>
+      </article>
 
-        const categoryLabels = {
-            "priority": "最優先",
-            "promising": "有望",
-            "review": "要検討",
-            "avoid": "要注意"
-        };
+      <!-- #25 公共事業積算 -->
+      <article class="bg-navy-800 rounded-lg mb-4 overflow-hidden">
+        <div class="bg-gray-500/10 border-l-4 border-gray-500 p-4">
+          <div class="flex items-center gap-3">
+            <span class="bg-gray-500 text-white font-bold px-2 py-1 rounded text-sm">3位</span>
+            <div>
+              <h3 class="font-bold text-white">公共事業積算の自動チェック</h3>
+              <p class="text-sm text-gray-400">三原市 | 行政機関</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-4 space-y-4 text-sm">
+          <div>
+            <h4 class="font-bold text-gold-400 mb-1">課題の内容</h4>
+            <p class="text-gray-300 leading-relaxed">
+              公共事業を発注する際には、設計図書や積算基準書、物価資料に基づき、工事に必要な費用や数量を積み上げて<strong class="text-white">工事全体の価格を算出する積算作業</strong>がある。
+              工事発注にあたっては積算のチェック作業が発生するが、<strong class="text-white">高い専門知識が必要</strong>で、かつ<strong class="text-white">作業量が膨大</strong>であり、大きな負担となっている。
+              積算条件や数値基準が各種基準に合致しているか、自動でチェックすることで、作業の効率化を図りたい。
+            </p>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <h4 class="font-bold text-gold-400 mb-1">使えるデータ</h4>
+              <p class="text-gray-300">各種オープンデータ及び一部の三原市保有データ（活用の調整がついたものに限る）</p>
+            </div>
+            <div>
+              <h4 class="font-bold text-gold-400 mb-1">自治体概要</h4>
+              <p class="text-gray-300">広島県東部に位置する人口9万人のまち。広島空港・JR三原駅（新幹線）・山陽自動車道などの交通機関が集まる。</p>
+            </div>
+          </div>
+          <div class="bg-navy-700/50 rounded p-3 mt-2">
+            <h4 class="font-bold text-white mb-2">なぜ3位なのか（3視点の評価）</h4>
+            <ul class="text-gray-300 space-y-1">
+              <li><strong class="text-blue-400">Market:</strong> 自治体向けソリューション市場7,733億円。全国1,700+自治体に共通課題</li>
+              <li><strong class="text-emerald-400">Data:</strong> 規制モートあり（国土交通省基準準拠で参入障壁）。ただしデータ自体の希少性は中程度</li>
+              <li><strong class="text-purple-400">Growth:</strong> 三原市を起点に県内自治体→全国展開可能。ただし入札プロセスで展開速度は遅い（5-10年）</li>
+            </ul>
+          </div>
+        </div>
+      </article>
 
-        // Render issues
-        function renderIssues(filter = 'all') {
-            const grid = document.getElementById('issues-grid');
-            const filteredIssues = filter === 'all'
-                ? issues
-                : issues.filter(i => i.category === filter);
+      <!-- #55 医療音声 -->
+      <article class="bg-navy-800 rounded-lg mb-4 overflow-hidden">
+        <div class="bg-gray-500/10 border-l-4 border-gray-600 p-4">
+          <div class="flex items-center gap-3">
+            <span class="bg-gray-600 text-white font-bold px-2 py-1 rounded text-sm">4位</span>
+            <div>
+              <h3 class="font-bold text-white">電子カルテへの高精度なAI音声自動入力システム</h3>
+              <p class="text-sm text-gray-400">広島大学病院 | 医療福祉</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-4 space-y-4 text-sm">
+          <div>
+            <h4 class="font-bold text-gold-400 mb-1">使えるデータ（これが最大の強み）</h4>
+            <p class="text-gray-300 leading-relaxed">
+              現在<strong class="text-white">医療面接の音声データ50時間以上</strong>を保有。
+              課題解決のためにはインフォームドコンセントを含む様々な医療シーンでの音声が必要となるため、
+              必要に応じて院内倫理委員会に申請し、<strong class="text-white">100時間を超える音声を録音して活用することが可能</strong>。
+            </p>
+          </div>
+          <div class="bg-navy-700/50 rounded p-3 mt-2">
+            <h4 class="font-bold text-white mb-2">なぜ4位なのか（3視点の評価）</h4>
+            <ul class="text-gray-300 space-y-1">
+              <li><strong class="text-blue-400">Market:</strong> 医療機関約18万施設。電子カルテ普及率上昇中で市場拡大</li>
+              <li><strong class="text-emerald-400">Data:</strong> <strong class="text-white">規制×専門性の二重障壁</strong>。倫理委員会承認済み100時間超の医療音声は他社が容易に取得できない。最強のデータモート</li>
+              <li><strong class="text-purple-400">Growth:</strong> 横展開には医療機器認証が必要。時間軸は長い（24-36ヶ月）が、一度参入すれば防御力が高い</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+    </section>
 
-            grid.innerHTML = filteredIssues.map(issue => {
-                const indColor = industryColors[issue.industry] || industryColors["その他(IT)"];
-                const catStyle = categoryStyles[issue.category];
+    <!-- 見送り案件 -->
+    <section class="mb-12">
+      <h2 class="text-lg font-bold text-gray-500 mb-4">見送り判断：シフト作成AI（#9, #61）</h2>
+      <div class="bg-navy-800/50 rounded-lg p-4 text-sm">
+        <p class="text-gray-400 mb-2"><strong class="text-gray-300">広島バス（400名）・せともす（観光施設）のシフト作成効率化</strong></p>
+        <p class="text-gray-400 mb-3">見送り理由：</p>
+        <ul class="text-gray-400 space-y-1">
+          <li>・<strong class="text-white">競合激戦</strong>：SmartHR、freee、HRMOS、シフオプ、SHIFTEE等が既に存在</li>
+          <li>・<strong class="text-white">データモート構築困難</strong>：シフトパターンDBは資金力のある大手が後発参入しても容易に追いつける</li>
+          <li>・差別化が「AI精度」のみでは持続的優位性が弱い</li>
+        </ul>
+      </div>
+    </section>
 
-                return `
-                    <div class="bg-white rounded-xl border-2 ${catStyle.border} p-5 shadow-sm cursor-pointer hover:shadow-md" onclick="openModal(${issue.id})">
-                        <div class="flex items-start justify-between mb-3">
-                            <span class="inline-block px-2 py-0.5 ${indColor.bg} ${indColor.text} text-xs font-medium rounded">${issue.industry}</span>
-                            <span class="inline-block px-2 py-0.5 ${catStyle.badge} text-xs font-medium rounded">${categoryLabels[issue.category]}</span>
-                        </div>
-                        <h4 class="font-bold mb-1 text-balance line-clamp-2">${issue.title}</h4>
-                        <p class="text-slate-500 text-sm mb-3">${issue.company}</p>
-                        <div class="flex items-center gap-4 text-sm">
-                            <div class="flex items-center gap-1">
-                                <span class="text-slate-400">技術</span>
-                                <span class="font-medium">${issue.techScore}</span>
-                            </div>
-                            <div class="flex items-center gap-1">
-                                <span class="text-slate-400">横展開</span>
-                                <span class="font-medium">${issue.scaleScore}</span>
-                            </div>
-                            <div class="flex items-center gap-1">
-                                <span class="text-slate-400">緊急性</span>
-                                <span class="font-medium">${issue.urgencyScore}</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
+    <!-- 3層ポートフォリオ -->
+    <section class="mb-12">
+      <h2 class="text-lg font-bold text-gold-400 mb-4">3層ポートフォリオ戦略</h2>
+      <div class="space-y-3">
+        <div class="bg-navy-800 rounded-lg p-4 border-l-4 border-gold-500">
+          <div class="flex justify-between items-center mb-2">
+            <span class="font-bold text-gold-400">戦略投資層（市場支配）</span>
+            <span class="text-sm text-gray-400">12-36ヶ月</span>
+          </div>
+          <p class="text-sm text-gray-300">水産流通DX、医療音声AI → データ堀を構築し、3年後の覇権獲得を狙う</p>
+        </div>
+        <div class="bg-navy-800 rounded-lg p-4 border-l-4 border-blue-500">
+          <div class="flex justify-between items-center mb-2">
+            <span class="font-bold text-blue-400">成長エンジン層（スケール）</span>
+            <span class="text-sm text-gray-400">6-18ヶ月</span>
+          </div>
+          <p class="text-sm text-gray-300">食品規格書自動転記 → 食品→医薬品→化学品への横展開で技術基盤を確立</p>
+        </div>
+        <div class="bg-navy-800 rounded-lg p-4 border-l-4 border-emerald-500">
+          <div class="flex justify-between items-center mb-2">
+            <span class="font-bold text-emerald-400">収益基盤層（キャッシュフロー）</span>
+            <span class="text-sm text-gray-400">即時-12ヶ月</span>
+          </div>
+          <p class="text-sm text-gray-300">公共事業積算チェック、自治体DX受託 → 成長投資の原資確保と実績作り</p>
+        </div>
+      </div>
+    </section>
 
-        // Filter issues
-        function filterIssues(filter) {
-            // Update button states
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                if (btn.dataset.filter === filter) {
-                    btn.className = 'filter-btn px-3 py-1.5 text-sm font-medium rounded-lg bg-blue-600 text-white';
-                } else {
-                    btn.className = 'filter-btn px-3 py-1.5 text-sm font-medium rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200';
-                }
-            });
+    <!-- 収束/相違マトリクス -->
+    <section class="mb-12">
+      <h2 class="text-lg font-bold text-gold-400 mb-4">3視点の収束と相違</h2>
 
-            renderIssues(filter);
-        }
+      <div class="mb-6">
+        <h3 class="font-bold text-white mb-2">全員一致（収束点）</h3>
+        <ul class="bg-navy-800 rounded-lg p-4 text-sm space-y-2">
+          <li class="flex items-start gap-2"><span class="text-gold-400">✓</span><span class="text-gray-300"><strong class="text-white">#1 食品規格書が最優先</strong>：即時収益化可能、技術基盤、横展開パス明確</span></li>
+          <li class="flex items-start gap-2"><span class="text-gold-400">✓</span><span class="text-gray-300"><strong class="text-white">水産流通DXは長期戦略投資</strong>：データ希少性最高、業界標準化の空白を狙う</span></li>
+          <li class="flex items-start gap-2"><span class="text-gold-400">✓</span><span class="text-gray-300"><strong class="text-white">シフト作成AIは見送り</strong>：競合激戦、データモート構築困難</span></li>
+          <li class="flex items-start gap-2"><span class="text-gold-400">✓</span><span class="text-gray-300"><strong class="text-white">「非標準データの標準化」が価値の源泉</strong>：生データを構造化できる技術力が競争優位</span></li>
+        </ul>
+      </div>
 
-        // Modal functions
-        function openModal(id) {
-            const issue = issues.find(i => i.id === id);
-            if (!issue) return;
+      <div>
+        <h3 class="font-bold text-white mb-2">意見が分かれた点（相違）</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm bg-navy-800 rounded-lg overflow-hidden">
+            <thead>
+              <tr class="border-b border-navy-700">
+                <th class="text-left p-3 text-gray-400">論点</th>
+                <th class="text-left p-3 text-blue-400">Market</th>
+                <th class="text-left p-3 text-emerald-400">Data</th>
+                <th class="text-left p-3 text-purple-400">Growth</th>
+              </tr>
+            </thead>
+            <tbody class="text-gray-300">
+              <tr class="border-b border-navy-700">
+                <td class="p-3 text-white">自治体DXの優先度</td>
+                <td class="p-3">維持（市場規模大）</td>
+                <td class="p-3">下方修正（データモート弱）</td>
+                <td class="p-3">収益基盤として維持</td>
+              </tr>
+              <tr class="border-b border-navy-700">
+                <td class="p-3 text-white">スケール戦略</td>
+                <td class="p-3">一点突破→面展開</td>
+                <td class="p-3">密度優先（10社濃密 > 100社薄い）</td>
+                <td class="p-3">3層ポートフォリオ</td>
+              </tr>
+              <tr>
+                <td class="p-3 text-white">水産DXの時間軸</td>
+                <td class="p-3">3年で主要港制覇</td>
+                <td class="p-3">5年スパン</td>
+                <td class="p-3">12-36ヶ月</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
 
-            const indColor = industryColors[issue.industry] || industryColors["その他(IT)"];
-            const catStyle = categoryStyles[issue.category];
+    <!-- データ資産評価 -->
+    <section class="mb-12">
+      <h2 class="text-lg font-bold text-gold-400 mb-4">データ資産評価マトリクス</h2>
+      <p class="text-sm text-gray-400 mb-3">available_dataを軸にした戦略的価値評価（◎=最高、○=高、△=低）</p>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm bg-navy-800 rounded-lg overflow-hidden">
+          <thead>
+            <tr class="border-b border-navy-700">
+              <th class="text-left p-3 text-gray-400">案件</th>
+              <th class="text-left p-3 text-gray-400">データ形式</th>
+              <th class="text-center p-3 text-gray-400">固有性</th>
+              <th class="text-center p-3 text-gray-400">希少性</th>
+              <th class="text-center p-3 text-gray-400">蓄積性</th>
+              <th class="text-center p-3 text-gray-400">モート</th>
+            </tr>
+          </thead>
+          <tbody class="text-gray-300">
+            <tr class="border-b border-navy-700 bg-gold-500/5">
+              <td class="p-3 text-white">#1 食品規格書</td>
+              <td class="p-3">Excel（製品情報）</td>
+              <td class="p-3 text-center text-gold-400">◎</td>
+              <td class="p-3 text-center">○</td>
+              <td class="p-3 text-center text-gold-400">◎</td>
+              <td class="p-3 text-center">○</td>
+            </tr>
+            <tr class="border-b border-navy-700 bg-gold-500/5">
+              <td class="p-3 text-white">#14,36 水産流通</td>
+              <td class="p-3">LINE/仕切書/目片</td>
+              <td class="p-3 text-center text-gold-400">◎</td>
+              <td class="p-3 text-center text-gold-400">◎</td>
+              <td class="p-3 text-center text-gold-400">◎</td>
+              <td class="p-3 text-center text-gold-400">◎</td>
+            </tr>
+            <tr class="border-b border-navy-700">
+              <td class="p-3 text-white">#25 公共積算</td>
+              <td class="p-3">オープンデータ+市保有</td>
+              <td class="p-3 text-center">○</td>
+              <td class="p-3 text-center">○</td>
+              <td class="p-3 text-center">○</td>
+              <td class="p-3 text-center">○</td>
+            </tr>
+            <tr class="border-b border-navy-700 bg-gold-500/5">
+              <td class="p-3 text-white">#55 医療音声</td>
+              <td class="p-3">音声100h+（倫理委員会承認）</td>
+              <td class="p-3 text-center text-gold-400">◎</td>
+              <td class="p-3 text-center text-gold-400">◎</td>
+              <td class="p-3 text-center">○</td>
+              <td class="p-3 text-center text-gold-400">◎</td>
+            </tr>
+            <tr class="opacity-50">
+              <td class="p-3">#9 シフト</td>
+              <td class="p-3">勤務表PDF</td>
+              <td class="p-3 text-center">△</td>
+              <td class="p-3 text-center">△</td>
+              <td class="p-3 text-center">○</td>
+              <td class="p-3 text-center">△</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-3 text-xs text-gray-500">
+        固有性：その企業だけが持つか / 希少性：市場で買えないか / 蓄積性：時間で価値が増すか / モート：参入障壁を構築できるか
+      </div>
+    </section>
 
-            document.getElementById('modal-title').textContent = issue.title;
-            document.getElementById('modal-content').innerHTML = `
-                <div class="space-y-6">
-                    <div class="flex flex-wrap gap-2">
-                        <span class="inline-block px-2 py-1 ${indColor.bg} ${indColor.text} text-sm font-medium rounded">${issue.industry}</span>
-                        <span class="inline-block px-2 py-1 ${catStyle.badge} text-sm font-medium rounded">${categoryLabels[issue.category]}</span>
-                        <span class="inline-block px-2 py-1 bg-slate-100 text-slate-600 text-sm font-medium rounded">${issue.rating}</span>
-                    </div>
+    <!-- 実装計画 -->
+    <section class="mb-12">
+      <h2 class="text-lg font-bold text-gold-400 mb-4">実装計画（36ヶ月）</h2>
+      <div class="space-y-4 text-sm">
+        <div class="bg-navy-800 rounded-lg p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="bg-emerald-500 text-white text-xs font-bold px-2 py-0.5 rounded">Phase 1</span>
+            <span class="text-white font-bold">収益基盤確立</span>
+            <span class="text-gray-400 ml-auto">0-12ヶ月</span>
+          </div>
+          <ul class="text-gray-300 space-y-1">
+            <li>・アンデルセン社とのPoC開始 → 3ヶ月で規格書生成精度90%達成</li>
+            <li>・三原市との積算チェックPoC → 6ヶ月で試験運用開始</li>
+            <li>・ウーオ社との協業交渉 → パートナーシップ契約締結</li>
+          </ul>
+        </div>
+        <div class="bg-navy-800 rounded-lg p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="bg-blue-500 text-white text-xs font-bold px-2 py-0.5 rounded">Phase 2</span>
+            <span class="text-white font-bold">成長エンジン点火</span>
+            <span class="text-gray-400 ml-auto">12-24ヶ月</span>
+          </div>
+          <ul class="text-gray-300 space-y-1">
+            <li>・食品業界への横展開 → 導入企業30社、ARR1億円</li>
+            <li>・広島県内自治体への展開 → 5自治体導入</li>
+            <li>・水産データ収集インフラ構築 → パイロット3港でデータ蓄積開始</li>
+          </ul>
+        </div>
+        <div class="bg-navy-800 rounded-lg p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="bg-gold-500 text-navy-900 text-xs font-bold px-2 py-0.5 rounded">Phase 3</span>
+            <span class="text-white font-bold">市場支配への布石</span>
+            <span class="text-gray-400 ml-auto">24-36ヶ月</span>
+          </div>
+          <ul class="text-gray-300 space-y-1">
+            <li>・医薬品・化学品への横展開 → 新規業界で10社獲得</li>
+            <li>・全国自治体への入札参加 → 10自治体以上で採用</li>
+            <li>・水産流通インフラの標準化 → 主要10港でのデータ統合完了</li>
+          </ul>
+        </div>
+      </div>
+    </section>
 
-                    <div>
-                        <p class="text-lg font-bold">${issue.company}</p>
-                    </div>
+    <!-- 市場データ -->
+    <section>
+      <h2 class="text-lg font-bold text-gold-400 mb-4">参考：市場データ</h2>
+      <div class="grid md:grid-cols-4 gap-3 text-sm">
+        <div class="bg-navy-800 rounded-lg p-4 text-center">
+          <div class="text-2xl font-bold text-gold-400">7,733億</div>
+          <div class="text-gray-400">自治体ソリューション市場</div>
+        </div>
+        <div class="bg-navy-800 rounded-lg p-4 text-center">
+          <div class="text-2xl font-bold text-white">約15兆</div>
+          <div class="text-gray-400">水産市場（DX率5%未満）</div>
+        </div>
+        <div class="bg-navy-800 rounded-lg p-4 text-center">
+          <div class="text-2xl font-bold text-white">約5万社</div>
+          <div class="text-gray-400">食品製造業</div>
+        </div>
+        <div class="bg-navy-800 rounded-lg p-4 text-center">
+          <div class="text-2xl font-bold text-white">1,700+</div>
+          <div class="text-gray-400">全国自治体数</div>
+        </div>
+      </div>
+    </section>
 
-                    <div>
-                        <h4 class="font-bold text-sm text-slate-500 mb-2">課題概要</h4>
-                        <p class="text-pretty">${issue.summary}</p>
-                    </div>
+  </main>
 
-                    <div class="grid grid-cols-4 gap-4 p-4 bg-slate-50 rounded-xl">
-                        <div class="text-center">
-                            <p class="text-xs text-slate-500 mb-1">技術実現性</p>
-                            <p class="text-xl font-bold">${issue.techScore}</p>
-                        </div>
-                        <div class="text-center">
-                            <p class="text-xs text-slate-500 mb-1">横展開性</p>
-                            <p class="text-xl font-bold">${issue.scaleScore}</p>
-                        </div>
-                        <div class="text-center">
-                            <p class="text-xs text-slate-500 mb-1">緊急性</p>
-                            <p class="text-xl font-bold">${issue.urgencyScore}</p>
-                        </div>
-                        <div class="text-center">
-                            <p class="text-xs text-slate-500 mb-1">リスク</p>
-                            <p class="text-xl font-bold">${issue.risk}</p>
-                        </div>
-                    </div>
+  <footer class="border-t border-navy-700 py-6 mt-12">
+    <div class="max-w-5xl mx-auto px-4 text-sm text-gray-500">
+      <p>分析手法：Blind Peer Review法（3エージェント × 3ラウンド）</p>
+    </div>
+  </footer>
 
-                    <div>
-                        <h4 class="font-bold text-sm text-slate-500 mb-2">判定理由</h4>
-                        <p class="text-pretty">${issue.reason}</p>
-                    </div>
-
-                    <div>
-                        <h4 class="font-bold text-sm text-slate-500 mb-2">推奨アプローチ</h4>
-                        <p class="text-pretty font-medium">${issue.approach}</p>
-                    </div>
-
-                    ${issue.marketSize !== '-' ? `
-                    <div class="grid grid-cols-2 gap-4 p-4 bg-blue-50 rounded-xl">
-                        <div>
-                            <p class="text-xs text-blue-600 mb-1">市場規模</p>
-                            <p class="font-bold">${issue.marketSize}</p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-blue-600 mb-1">想定単価</p>
-                            <p class="font-bold tabular-nums">${issue.priceRange}</p>
-                        </div>
-                    </div>
-                    ` : ''}
-                </div>
-            `;
-
-            document.getElementById('modal-backdrop').classList.remove('hidden');
-            document.getElementById('modal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal() {
-            document.getElementById('modal-backdrop').classList.add('hidden');
-            document.getElementById('modal').classList.add('hidden');
-            document.body.style.overflow = '';
-        }
-
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeModal();
-        });
-
-        // Initial render
-        renderIssues();
-    </script>
 </body>
 </html>
